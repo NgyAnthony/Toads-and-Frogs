@@ -59,13 +59,21 @@ def possible(board, n, i, player):
         return False
 
     # Check the pattern Player->Enemy->Empty or -> Player->Empty
-    if board[i + way] == 0:
-        return i + way
-    elif board[i + way] == enemy_player and board[i + way * 2] == 0:
-        return i + way * 2
-    else:
-        return False
-
+    try:
+        if board[i + way] == 0:
+            if i + way < 0:
+                return False
+            else:
+                return i + way
+        elif board[i + way] == enemy_player and board[i + way * 2] == 0:
+            if i + way < 0 or i + way * 2 < 0:
+                return False
+            else:
+                return i + way * 2
+        else:
+            return False
+    except:
+        pass
 
 def select(board, n, player):
     number_is_invalid = True
@@ -128,9 +136,21 @@ def toads_and_frogs(n, p):
         display(board, n)
         number = select(board, n, current_player)
         move(board, n, current_player, number)
+
+        player_one_can_play = again(board, n, 1)
+        player_two_can_play = again(board, n, 2)
+        can_play_game = player_one_can_play and player_two_can_play
+
         if can_play_game:
             current_player = switch_player(current_player)
 
+    if current_player == 1:
+        winner = 2
+    elif current_player == 2:
+        winner = 1
+
+    print("Game is over ! Player {} won !".format(winner))
+
 
 if __name__ == '__main__':
-    toads_and_frogs(12, 4)
+    toads_and_frogs(6, 6)
